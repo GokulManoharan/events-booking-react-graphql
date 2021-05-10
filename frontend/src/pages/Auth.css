@@ -1,0 +1,51 @@
+.sign-up-wrapper{
+    width: 400rem;
+    margin: 15rem auto;
+    max-width: 30%;  
+}
+
+.auth-form-wrapper {    
+    border-bottom: 1px solid #C60021;
+    border-left: 1px solid #C60021;
+    border-right: 1px solid #C60021;
+    padding: 30px;
+}
+
+.sign-in-btn{
+    background: #fff;
+    border: 1px solid #C60021;
+    border-radius: 5px;
+    color: #000;
+}
+
+.sign-in-btn:hover,
+.sign-in-btn:focus,
+.sign-in-btn:active{
+    background: #C60021 !important;
+    color: #fff;
+    border: 1px solid #C60021 !important;
+}
+
+.button-wrapper{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.tab-title{
+    color: #000;
+}
+
+.tab-title:hover,
+.tab-title:active,
+.tab-title-active {
+    color: #C60021;
+}
+
+.nav-tabs .nav-item.show .nav-link, 
+.nav-tabs .nav-link.active{
+    border:1px solid #C60021 ;
+}
+
+.nav-tabs{
+    border-bottom:1px solid #C60021 ;
+}

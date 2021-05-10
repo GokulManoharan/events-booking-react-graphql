@@ -43,11 +43,11 @@ module.exports = {
     login: async ({email, password}) => {
         const user = await User.findOne({email});
         if(!user){
-            throw new Error('Invalid credentials 1!')
+            throw new Error('Invalid credentials!')
         }
         const isMatching = await bcrypt.compare(password, user.password);
         if(!isMatching){
-            throw new Error('Invalid credentials 2!')
+            throw new Error('Invalid credentials!')
         }
         const token = jwt.sign({userId: user.id, email: user.email}, 'extrasecretkey',{
             expiresIn: '1h'
