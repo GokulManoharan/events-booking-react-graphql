@@ -11,29 +11,39 @@ const AuthTabs = ({ title, setKey }) => (
         activeKey={title}
         onSelect={(k) => setKey(k)}
     >
-        <Tab eventKey="signUp" title={<TabHeader text="Sign Up" active={title === "signUp"} />} />
         <Tab eventKey="signIn" title={<TabHeader text="Sign in" active={title === "signIn"} />} />
+        <Tab eventKey="signUp" title={<TabHeader text="Sign Up" active={title === "signUp"} />} />
     </Tabs>
 )
 
 const SignUp = props => {
-    const [key, setKey] = useState('signUp');
+    const [key, setKey] = useState('signIn');
+    const [isLoading, setisLoading] = useState(false);
     const emailEl = useRef();
     const passwordEl = useRef();
+    const firstNameEl = useRef();
+    const lastNameEl = useRef();
     const auth = useContext(AuthContext);
 
     const handleSubmit = e => {
         e.preventDefault();
         const email = emailEl.current.value;
         const password = passwordEl.current.value;
+        let firstName, lastName;
+        if(key === "signUp")
+        {
+            firstName = firstNameEl.current.value;
+            lastName = lastNameEl.current.value;
+        }
+        
 
         if (email.trim().length === 0 || password.trim().length === 0) {
             return
         }
-
+        setisLoading(true);
         let body;
 
-        if(key === "signIn"){
+        if (key === "signIn") {
             body = {
                 query: `
                     query {
@@ -54,7 +64,9 @@ const SignUp = props => {
                     mutation {
                         createUser(userInput: {
                             email: "${email}",
-                            password: "${password}"
+                            password: "${password}",
+                            firstName: "${firstName}",
+                            lastName: "${lastName}",
                         }){
                             _id
                             email
@@ -65,21 +77,22 @@ const SignUp = props => {
         }
 
         axios.post('http://localhost:5000/graphql',
-        JSON.stringify(body),
-        {
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        }).then(res => {
-            if(![200,201].includes(res.status)){
-                throw new Error('Failed')
-            }
-            if(res.data.data.hasOwnProperty('login') && res.data.data.login.hasOwnProperty('token')){
-                auth.login(res.data.data.login.userId, res.data.data.login.token, res.data.data.login.tokenExpiration);
-            }
-            console.log(res)
-        })
-        .catch(err => console.log(err))
+            JSON.stringify(body),
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then(res => {
+                if (![200, 201].includes(res.status)) {
+                    throw new Error('Failed')
+                }
+                setisLoading(false);
+                if (res.data.data.hasOwnProperty('login') && res.data.data.login.hasOwnProperty('token')) {
+                    auth.login(res.data.data.login.userId, res.data.data.login.token, res.data.data.login.tokenExpiration);
+                }
+                console.log(res)
+            })
+            .catch(err => console.log(err))
 
     }
 
@@ -88,6 +101,30 @@ const SignUp = props => {
             <AuthTabs title={key} setKey={setKey} />
             <Form onSubmit={handleSubmit}>
                 <Form.Group className="auth-form-wrapper">
+                    {
+                        key === "signUp" && (
+                            <>
+                                <Form.Row>
+                                    <Form.Label column="lg" lg={12}>
+                                        First name
+                                 </Form.Label>
+                                    <Col>
+                                        <Form.Control ref={firstNameEl} size="lg" type="text" placeholder="First name" />
+                                    </Col>
+                                </Form.Row>
+                                <br />
+                                <Form.Row>
+                                    <Form.Label column="lg" lg={12}>
+                                        Last name
+                                </Form.Label>
+                                    <Col>
+                                        <Form.Control ref={lastNameEl} size="lg" type="text" placeholder="Last name" />
+                                    </Col>
+                                </Form.Row>
+                                <br />
+                            </>
+                        )
+                    }
                     <Form.Row>
                         <Form.Label column="lg" lg={12}>
                             Email address
@@ -107,7 +144,11 @@ const SignUp = props => {
                     </Form.Row>
                     <br />
                     <div className="button-wrapper">
-                        <Button type="submit" size="lg" className="sign-in-btn">
+                        <Button
+                            type="submit"
+                            size="lg"
+                            className="app-btn"
+                        >
                             {key === "signIn" ? "Login" : "Sign up"}
                         </Button>
                     </div>

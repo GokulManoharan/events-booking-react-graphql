@@ -11,16 +11,24 @@
     padding: 30px;
 }
 
-.sign-in-btn{
+.app-btn{
     background: #fff;
     border: 1px solid #C60021;
     border-radius: 5px;
     color: #000;
 }
 
-.sign-in-btn:hover,
-.sign-in-btn:focus,
-.sign-in-btn:active{
+.app-btn-outline,
+.app-btn-outline:hover{
+    background: #fff;
+    border: 1px solid #C60021;
+    border-radius: 5px;
+    color: #000;
+}
+
+.app-btn:hover,
+.app-btn:focus,
+.app-btn:active{
     background: #C60021 !important;
     color: #fff;
     border: 1px solid #C60021 !important;
