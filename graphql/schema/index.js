@@ -22,6 +22,8 @@ type User {
     _id: ID!,
     email: String!,
     password: String,
+    firstName: String,
+    lastName: String,
     createdEvents: [Event!]
 }
 
@@ -41,6 +43,8 @@ input EventInput {
 input UserInput {
     email: String!
     password: String!
+    firstName: String!
+    lastName: String!
 }
 
 type RootQuery {
