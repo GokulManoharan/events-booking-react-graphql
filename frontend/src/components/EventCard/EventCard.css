@@ -1,0 +1,9 @@
+.event-card-wrapper div{
+    height: 10rem;
+    border: 1px solid red;
+    border-radius: 5px;
+}
+
+.event-card-wrapper{
+    margin: 1rem 0;
+}

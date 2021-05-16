@@ -1,6 +1,7 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { Button, Row, Col, Form } from 'react-bootstrap';
 import AppModal from "../components/Modals/Modal";
+import EventCard from "../components/EventCard/EventCard";
 import axios from 'axios';
 import AuthContext from "../contexts/auth-context";
 
@@ -9,6 +10,7 @@ import './Events.css';
 const EventsPage = () => {
 
     const [modalShow, setModalShow] = useState(false);
+    const [availableEvents, setAvailableEvents] = useState([]);
     const titleEl = useRef();
     const priceEl = useRef();
     const dateEl = useRef();
@@ -26,6 +28,8 @@ const EventsPage = () => {
                     events {
                         title
                         date
+                        price
+                        description
                         _id
                         creator {
                             email
@@ -47,6 +51,7 @@ const EventsPage = () => {
                 if (![200, 201].includes(res.status)) {
                     throw new Error('Failed')
                 }
+                setAvailableEvents(res.data.data.events);
                 console.log(res)
             })
             .catch(err => console.log(err))
@@ -95,10 +100,14 @@ const EventsPage = () => {
                 }
             }).then(res => {
                 if (![200, 201].includes(res.status)) {
-                    throw new Error('Failed')
+                    throw new Error('Failed');
                 }
+                setModalShow(!modalShow);
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                setModalShow(!modalShow);
+                throw new Error('err');
+            })
     }
 
 
@@ -106,11 +115,24 @@ const EventsPage = () => {
         <>
             {
                 auth.token &&
-                < div className="events-control" >
+                <div className="events-control" >
                     <p>Let others know your event plans!</p>
                     <Button className="app-btn" size="lg" onClick={() => setModalShow(!modalShow)} block>
                         Create an event
-            </Button>
+                    </Button>
+
+                    {
+                        availableEvents.length > 0 && 
+                        <Row>
+
+                            {
+                                availableEvents.map(event => {
+                                    return <EventCard event={event} />
+                                })
+                            }
+                        </Row>
+                    }
+
                     <AppModal
                         title="Add an event"
                         show={modalShow}
